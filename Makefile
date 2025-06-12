@@ -2,14 +2,18 @@ COMPILEFILE := ./examples/body/readout.go
 
 ABSPATH := $(shell pwd)
 
-ifeq ($(GCC),)
+ifeq ($(TOOLCHAIN),)
   TOOLCHAIN_DIR := $(ABSPATH)/vic-toolchain/arm-linux-gnueabi/bin
   TOOLCHAIN := $(TOOLCHAIN_DIR)/arm-linux-gnueabi-
-  GCC := ${TOOLCHAIN}gcc
-  GPP := ${TOOLCHAIN}g++
-  ifeq ($(shell test -d $(dir $(TOOLCHAIN_DIR)) && echo yes),)
-    $(error The directory $(dir $(TOOLCHAIN_DIR)) does not exist. You must define a $$TOOLCHAIN or follow the README instructions to get a toolchain.)
-  endif
+endif
+
+ifeq ($(shell test -d $(dir $(TOOLCHAIN_DIR)) && echo yes),)
+  $(error The directory $(dir $(TOOLCHAIN_DIR)) does not exist. You must define a $$TOOLCHAIN or follow the README instructions to get a toolchain.)
+endif
+
+ifeq ($(GCC),)
+  GCC := ${TOOLCHAIN}clang
+  GPP := ${TOOLCHAIN}clang++
 endif
 
 ifneq (,$(findstring gnueabihf,$(TOOLCHAIN)))
@@ -42,7 +46,10 @@ libjpeg-turbo:
 
 jpeg_interface:
 	mkdir -p build
-	$(GPP) $(GPP_FLAGS) $(COMMON_FLAGS) -o build/libjpeg_interface.so c_src/jpeg/jpeg.cpp -Ilibjpeg-turbo -fopenmp -static-libstdc++
+	$(GPP) $(GPP_FLAGS) $(COMMON_FLAGS) -o build/libjpeg_interface.so c_src/jpeg/jpeg.cpp -I${PWD}/build/libjpeg-turbo/include -stdlib=libc++
+
+# ++		-L${PWD}/build/libjpeg-turbo/lib \
+# ++		-I${PWD}/build/libjpeg-turbo/include \
 
 example:
 	CC="$(GCC)" \

@@ -4,7 +4,7 @@ ABSPATH="$(pwd)"
 
 
 if [[ $TOOLCHAIN ]]; then
-	if [[ ! -f ${TOOLCHAIN}gcc ]]; then
+	if [[ ! -f ${TOOLCHAIN}clang ]]; then
 		echo "The toolchain you have provided is invalid. ${TOOLCHAIN}gcc does not exist."
 		exit 1
 	fi
@@ -26,13 +26,13 @@ else
 	mkdir -p build
 	cd build
 	if [[ $TOOLCHAIN == *"gnueabihf"* ]]; then
-		ARMCC_FLAGS="-mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7 -O3 -ffast-math -fopenmp"
+		ARMCC_FLAGS="-mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7 -O3 -ffast-math"
 	else
-		ARMCC_FLAGS="-mfloat-abi=softfp -mfpu=neon-vfpv4 -mcpu=cortex-a7 -O3 -ffast-math -fopenmp"
+		ARMCC_FLAGS="-mfloat-abi=softfp -mfpu=neon-vfpv4 -mcpu=cortex-a7 -O3 -ffast-math"
 	fi
 	ARMCC_PREFIX=${TOOLCHAIN}
-	cmake -DCMAKE_C_COMPILER=${ARMCC_PREFIX}gcc \
-  	-DCMAKE_CXX_COMPILER=${ARMCC_PREFIX}g++ \
+	cmake -DCMAKE_C_COMPILER=${ARMCC_PREFIX}clang \
+  	-DCMAKE_CXX_COMPILER=${ARMCC_PREFIX}clang++ \
   	-DCMAKE_C_FLAGS="${ARMCC_FLAGS}" \
   	-DCMAKE_CXX_FLAGS="${ARMCC_FLAGS}" \
   	-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -44,5 +44,6 @@ else
 	make -j
 	make install
 	echo
-	echo "libjpeg-turbo has been built! ${ABSPATH}/build/libjpeg-turbo/lib"
+	cp ${ABSPATH}/build/libjpeg-turbo/lib/libturbojpeg.so* ${ABSPATH}/build/
+	echo "libjpeg-turbo has been built! ${ABSPATH}/build/libjpeg-turbo/lib and also copied in ${ABSPATH}/build"
 fi
