@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/kercre123/vector-gobot/pkg/vbody"
 	"github.com/kercre123/vector-gobot/pkg/vscreen"
@@ -11,13 +12,17 @@ import (
 var isMidas bool
 
 func main() {
-	fmt.Println("Initing body...")
+	fmt.Print("Initing body...")
 	err := vbody.InitSpine()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	vbody.SetLEDs(0x000000, 0x000000, 0x000000)
+
+	frameChan := vbody.GetFrameChan()
+	fmt.Println(" FrameChan is OK")
+	vbody.SetLEDs(0xA500FF, 0x000000, 0x000000)
 
 	fmt.Print("Initing screen...")
 	vscreen.InitLCD()
@@ -33,10 +38,23 @@ func main() {
 	}
 	vbody.SetLEDs(0xA500FF, 0xA500FF, 0xA500FF)
 
+	fpsCount := 0
+	fps := 0
 
-	for {
+	// update FPS value each second
+	ticker := time.NewTicker(1 * time.Second)
+	go func() {
+	for range ticker.C {
+		fps = fpsCount
+		fpsCount = 0
+	}
+    }()
+
+	for frame := range frameChan {
 		// draw text
-		message := fmt.Sprintf("Hello world!")
+		fpsCount++
+		batteryVotage := 0.00136719 * float32(frame.BattVoltage)
+		message := fmt.Sprintf("Hello world!    FPS:%d   BATTERY: %02.2fV (raw: %d)", fps, batteryVotage, frame.BattVoltage)
 		scrnData := vscreen.CreateTextImage(message)
 		vscreen.SetScreen(scrnData)
 	}

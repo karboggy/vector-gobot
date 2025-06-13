@@ -17,8 +17,8 @@ TARGET_DIRECTORY=/data/karboggy
 # screen
 EXAMPLE_CATEGORY=screen
 
-# screen-helloworld, screen-drawing
-EXAMPLE_NAME=screen-helloworld
+# screen-helloworld, screen-battery, screen-drawing
+EXAMPLE_NAME=screen-battery
 
 echo "Building..."
 CC="${TOOLCHAIN}clang" \
