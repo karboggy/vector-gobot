@@ -51,13 +51,19 @@ func main() {
 	var cpt float64 = 10.0
 
 	// load the font
-	if err := dc.LoadFontFace("/data/karboggy/res/fonts/Arial.ttf", 20); err != nil {
+	fontPointSize = 24
+	if err := dc.LoadFontFace("/data/karboggy/fonts/Arial.ttf", fontPointSize); err != nil {
         log.Fatal(err)
     }
 
+	imageBlueSky, err := gg.LoadPNG("/data/karboggy/images/blue-sky.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// main loop
 	for {
-		cpt += 1.0
+		cpt += 1.5
 		if int(cpt) > 50 {
 			cpt = 0;
 		}
@@ -65,6 +71,9 @@ func main() {
 		// clear black
 		dc.SetRGB(0, 0, 0)
 		dc.Clear()
+
+		// draw background image
+		dc.DrawImage(imageBlueSky, 0, 0)
 
 		// draw a green circle
 		dc.SetRGB(0, 1, 0)

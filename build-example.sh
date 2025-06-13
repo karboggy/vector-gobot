@@ -29,7 +29,7 @@ CGO_ENABLED=1 \
 go build -o build/example-$EXAMPLE_NAME examples/$EXAMPLE_CATEGORY/$EXAMPLE_NAME.go
 
 echo "Copy res in build..."
-cp -r ./res ./build/res
+cp -rf ./res/* ./build
 
 echo "Deploying..."
 ssh root@$VECTOR_IP_ADDRESS "mkdir -p $TARGET_DIRECTORY"
