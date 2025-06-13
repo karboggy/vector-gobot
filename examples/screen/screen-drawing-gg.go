@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 	"image"
+	"log"
 	
 	"github.com/kercre123/vector-gobot/pkg/vbody"
 	"github.com/kercre123/vector-gobot/pkg/vscreen"
@@ -49,6 +50,11 @@ func main() {
 	dc := gg.NewContextForRGBA(img)
 	var cpt float64 = 10.0
 
+	// load the font
+	if err := dc.LoadFontFace("/data/karboggy/res/fonts/Arial.ttf", 20); err != nil {
+        log.Fatal(err)
+    }
+
 	// main loop
 	for {
 		cpt += 1.0
@@ -67,6 +73,12 @@ func main() {
 		var radius = 15 + cpt / 3
 		dc.DrawCircle(x, y, radius)
 		dc.Fill()
+
+		// draw text
+		dc.SetRGB(1, 1, 1)
+		dc.DrawStringAnchored("Hello world !", float64(W)/2, float64(H)/2, 0.5, 0.5)
+		dc.Fill()
+
 
 		// convert the color format from RGBA to RGB565
 		pixels := make([]uint16, W*H)

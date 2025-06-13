@@ -28,6 +28,9 @@ GOARCH=arm \
 CGO_ENABLED=1 \
 go build -o build/example-$EXAMPLE_NAME examples/$EXAMPLE_CATEGORY/$EXAMPLE_NAME.go
 
+echo "Copy res in build..."
+cp -r ./res ./build/res
+
 echo "Deploying..."
 ssh root@$VECTOR_IP_ADDRESS "mkdir -p $TARGET_DIRECTORY"
 rsync -av --exclude 'libjpeg-turbo' ./build/* root@$VECTOR_IP_ADDRESS:$TARGET_DIRECTORY/
