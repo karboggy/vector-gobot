@@ -14,5 +14,5 @@ TOOLCHAIN=$TOOLCHAIN make vector-gobot
 TOOLCHAIN=$TOOLCHAIN make libjpeg-turbo
 TOOLCHAIN=$TOOLCHAIN make jpeg_interface
 
-# build program
-VICOS_SDK_DIRECTORY=$VICOS_SDK_DIRECTORY TOOLCHAIN=$TOOLCHAIN ./build-example.sh
+# auto build example mjpeg
+# VICOS_SDK_DIRECTORY=$VICOS_SDK_DIRECTORY TOOLCHAIN=$TOOLCHAIN ./build-example-mjpeg.sh
